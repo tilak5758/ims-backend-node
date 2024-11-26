@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0d5f1wq" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.28.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
+  <bpmn:process id="process_incident_management" name="Incident Management" isExecutable="true">
+    <bpmn:documentation>Incident Creation: The incident creation process involves capturing incidents as they are reported by users. This process can be automated using BPMN processes in ServiceNow, which can ensure that incidents are properly classified and routed to the correct support team.</bpmn:documentation>
+    <bpmn:extensionElements />
+    <bpmn:startEvent id="process_start" name="Process Start">
+      <bpmn:extensionElements />
+      <bpmn:outgoing>Flow_1ewj1x4</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1ewj1x4" sourceRef="process_start" targetRef="categorization" />
+    <bpmn:sequenceFlow id="Flow_0a46g4u" sourceRef="categorization" targetRef="initial_assessment" />
+    <bpmn:sequenceFlow id="Flow_1mtwrz4" sourceRef="assignment" targetRef="acknowledgement" />
+    <bpmn:sequenceFlow id="Flow_096aezz" sourceRef="investigation" targetRef="Gateway_1yec3kq" />
+    <bpmn:endEvent id="completed" name="Completed">
+      <bpmn:incoming>Flow_0yn6heb</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0yn6heb" sourceRef="closure" targetRef="completed" />
+    <bpmn:userTask id="categorization" name="Categorization">
+      <bpmn:documentation>Once the incident request is logged into the system, the next step is to categorize it based on its type, priority, and impact. This step ensures that the incident is properly routed to the appropriate support team for resolution. For example, an incident related to network connectivity issues would be categorized under the network </bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:assignmentDefinition assignee="sinugaud" candidateGroups="HR" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ewj1x4</bpmn:incoming>
+      <bpmn:outgoing>Flow_0a46g4u</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="initial_assessment" name="Initial Assessment">
+      <bpmn:documentation>Initial Assessment: After the incident request is categorized, it is assessed to determine its severity and impact. This step helps to ensure that the incident is properly prioritized and escalated as necessary. For example, an incident that affects the entire organization and causes a significant business impact would be given a higher priority and escalated to senior management for immediate attention.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:assignmentDefinition assignee="sinugaud" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0a46g4u</bpmn:incoming>
+      <bpmn:incoming>Flow_03wsmyf</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ngz60t</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="assignment" name="Assignment">
+      <bpmn:documentation>Assignment: Once the incident request is assessed, it is assigned to a support team or technician based on their skillset and workload. This step ensures that the incident is resolved in a timely manner by the appropriate person or team. For example, an incident related to a software application issue would be assigned to the application support team with the relevant expertise.
+
+</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:assignmentDefinition assignee="sinugaud" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ife1bq</bpmn:incoming>
+      <bpmn:outgoing>Flow_1mtwrz4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="investigation" name="Investigation">
+      <bpmn:documentation>Investigation :The support team or technician investigates the incident request to determine the root cause of the issue. This step involves gathering additional information about the incident, analyzing it, and identifying the underlying cause of the incident. For example, an investigation may involve reviewing system logs, checking network connectivity, or troubleshooting the software application.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:assignmentDefinition assignee="sinugaud" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1sjf9qt</bpmn:incoming>
+      <bpmn:incoming>Flow_04xu95g</bpmn:incoming>
+      <bpmn:outgoing>Flow_096aezz</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="resolution" name="Resolution">
+      <bpmn:documentation> Once the root cause of the incident request is identified, the support team or technician works to resolve the incident, keeping the user updated on the progress of the resolution. This step involves fixing the issue, testing the solution, and verifying that the issue has been fully resolved.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:assignmentDefinition assignee="sinugaud" />
+        <zeebe:userTask />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1gfu0t4</bpmn:incoming>
+      <bpmn:outgoing>Flow_0q8uw96</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="closure" name="Closure">
+      <bpmn:documentation>Once the incident is resolved, it is closed in the system, and the user is notified of the resolution. This step involves updating the incident record with details of the resolution, closing the incident, and notifying the user that the incident has been resolved.
+
+notification servie task</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:assignmentDefinition assignee="sinugaud" />
+        <zeebe:userTask />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0q8uw96</bpmn:incoming>
+      <bpmn:outgoing>Flow_0yn6heb</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="acknowledgement" name="Acknowledgement">
+      <bpmn:documentation>Acknowledgement: After the incident request is assigned, the support team or technician acknowledges receipt of the incident request and begins working on resolving the incident. This step helps to ensure that the user is aware that their incident request has been received and is being addressed.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:assignmentDefinition assignee="sinugaud" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1mtwrz4</bpmn:incoming>
+      <bpmn:outgoing>Flow_04xu95g</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1uogfxi" default="Flow_0ife1bq">
+      <bpmn:incoming>Flow_0ngz60t</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ife1bq</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0g120b1</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0ngz60t" sourceRef="initial_assessment" targetRef="Gateway_1uogfxi" />
+    <bpmn:exclusiveGateway id="Gateway_1yec3kq" default="Flow_1gfu0t4">
+      <bpmn:incoming>Flow_096aezz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1gfu0t4</bpmn:outgoing>
+      <bpmn:outgoing>Flow_05mnx6j</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1gfu0t4" sourceRef="Gateway_1yec3kq" targetRef="resolution" />
+    <bpmn:sequenceFlow id="Flow_05mnx6j" sourceRef="Gateway_1yec3kq" targetRef="revised_investigation">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=investigation_revised = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0ife1bq" sourceRef="Gateway_1uogfxi" targetRef="assignment" />
+    <bpmn:userTask id="revised_investigation" name="Revised Investigation">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:assignmentDefinition assignee="sinugaud" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_05mnx6j</bpmn:incoming>
+      <bpmn:outgoing>Flow_1sjf9qt</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1sjf9qt" sourceRef="revised_investigation" targetRef="investigation" />
+    <bpmn:sequenceFlow id="Flow_0g120b1" sourceRef="Gateway_1uogfxi" targetRef="revised_initial_assessment">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=initial_assessment_revised = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_03wsmyf" sourceRef="revised_initial_assessment" targetRef="initial_assessment" />
+    <bpmn:userTask id="revised_initial_assessment" name="Revised Initial Assessment">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:assignmentDefinition assignee="sinugaud" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0g120b1</bpmn:incoming>
+      <bpmn:outgoing>Flow_03wsmyf</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_04xu95g" sourceRef="acknowledgement" targetRef="investigation" />
+    <bpmn:sequenceFlow id="Flow_0q8uw96" sourceRef="resolution" targetRef="closure" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="process_incident_management">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="process_start">
+        <dc:Bounds x="152" y="112" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="138" y="155" width="67" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0856od6_di" bpmnElement="completed">
+        <dc:Bounds x="2102" y="112" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2096" y="155" width="54" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17ex7wu_di" bpmnElement="categorization">
+        <dc:Bounds x="310" y="90" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0y8v521_di" bpmnElement="initial_assessment">
+        <dc:Bounds x="570" y="90" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1cjpi9h_di" bpmnElement="assignment">
+        <dc:Bounds x="890" y="90" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0lobm73_di" bpmnElement="investigation">
+        <dc:Bounds x="1310" y="90" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1he1mk5_di" bpmnElement="resolution">
+        <dc:Bounds x="1650" y="90" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1j4o1qq_di" bpmnElement="closure">
+        <dc:Bounds x="1850" y="90" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0c1zz0e_di" bpmnElement="acknowledgement">
+        <dc:Bounds x="1090" y="90" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1uogfxi_di" bpmnElement="Gateway_1uogfxi" isMarkerVisible="true">
+        <dc:Bounds x="785" y="105" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1yec3kq_di" bpmnElement="Gateway_1yec3kq" isMarkerVisible="true">
+        <dc:Bounds x="1515" y="105" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1d0y3j4_di" bpmnElement="revised_investigation">
+        <dc:Bounds x="1490" y="260" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0za64o9_di" bpmnElement="revised_initial_assessment">
+        <dc:Bounds x="760" y="270" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1ewj1x4_di" bpmnElement="Flow_1ewj1x4">
+        <di:waypoint x="188" y="130" />
+        <di:waypoint x="310" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0a46g4u_di" bpmnElement="Flow_0a46g4u">
+        <di:waypoint x="410" y="130" />
+        <di:waypoint x="570" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mtwrz4_di" bpmnElement="Flow_1mtwrz4">
+        <di:waypoint x="990" y="130" />
+        <di:waypoint x="1090" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_096aezz_di" bpmnElement="Flow_096aezz">
+        <di:waypoint x="1410" y="130" />
+        <di:waypoint x="1515" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yn6heb_di" bpmnElement="Flow_0yn6heb">
+        <di:waypoint x="1950" y="130" />
+        <di:waypoint x="2102" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ngz60t_di" bpmnElement="Flow_0ngz60t">
+        <di:waypoint x="670" y="130" />
+        <di:waypoint x="785" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gfu0t4_di" bpmnElement="Flow_1gfu0t4">
+        <di:waypoint x="1565" y="130" />
+        <di:waypoint x="1650" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05mnx6j_di" bpmnElement="Flow_05mnx6j">
+        <di:waypoint x="1540" y="155" />
+        <di:waypoint x="1540" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ife1bq_di" bpmnElement="Flow_0ife1bq">
+        <di:waypoint x="835" y="130" />
+        <di:waypoint x="890" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1sjf9qt_di" bpmnElement="Flow_1sjf9qt">
+        <di:waypoint x="1490" y="300" />
+        <di:waypoint x="1380" y="300" />
+        <di:waypoint x="1380" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g120b1_di" bpmnElement="Flow_0g120b1">
+        <di:waypoint x="810" y="155" />
+        <di:waypoint x="810" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03wsmyf_di" bpmnElement="Flow_03wsmyf">
+        <di:waypoint x="760" y="310" />
+        <di:waypoint x="620" y="310" />
+        <di:waypoint x="620" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04xu95g_di" bpmnElement="Flow_04xu95g">
+        <di:waypoint x="1190" y="130" />
+        <di:waypoint x="1310" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q8uw96_di" bpmnElement="Flow_0q8uw96">
+        <di:waypoint x="1750" y="130" />
+        <di:waypoint x="1850" y="130" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

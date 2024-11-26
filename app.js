@@ -63,7 +63,7 @@ app.post('api/complete-job', async (req, res) => {
 });
 
 // Endpoint to get data from Elasticsearch
-app.get('api/es/completed-tasks', async (req, res) => {
+app.get('/api/es/completed-tasks', async (req, res) => {
   const alias = req.query.alias;
 
   if (!alias) {
@@ -82,6 +82,8 @@ app.get('api/es/completed-tasks', async (req, res) => {
         },
       },
     });
+
+    console.log(result)
 
     if (!result.hits || !result.hits.hits) {
       return res.status(404).json({ error: 'No completed tasks found' });
@@ -115,6 +117,8 @@ app.get('api/es/completed-tasks', async (req, res) => {
       rejectionReason: hit._source?.rejectionReason,
       recordType: hit._source?.recordType,
     }));
+
+    console.log(tasks)
 
     res.status(200).json({
       message: `Completed tasks retrieved from alias: ${alias}`,

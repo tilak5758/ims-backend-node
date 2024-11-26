@@ -1,9 +1,9 @@
 import { zbc } from '../config/camundaConfig.js';  // Assuming the zbc client is configured in this file
 import axios from 'axios';
 import { config } from 'dotenv';
+import { esClient } from '../config/elasticConfig.js';
 
 config()
-
 
 export const getActiveTasks = async (req, res) => {
     try {
@@ -155,3 +155,52 @@ export const removeAssigneeFromTask = async (req, res) => {
   }
 };
 
+export const getTasksByAssignee = async (req, res) => {
+  const { assignee } = req.query;
+  if (!assignee) {
+    return res.status(400).json({ error: 'Assignee is required' });
+  }
+  try {
+    const result = await esClient.search({
+      index: 'tasks',
+      body: { query: { term: { assignee } } },
+    });
+    const tasks = result.hits.hits.map(hit => hit._source);
+    res.status(200).json({ tasks });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch tasks', details: error.message });
+  }
+};
+
+export const getTaskById = async (req, res) => {
+  const { id } = req.query;
+  try {
+    const result = await esClient.get({ index: 'tasks', id });
+    res.status(200).json({ task: result._source });
+  } catch (error) {
+    res.status(404).json({ error: 'Task not found', details: error.message });
+  }
+};
+
+export const getCompletedTasksByAssignee = async (req, res) => {
+  const { assignee } = req.query;
+  if (!assignee) {
+    return res.status(400).json({ error: 'Assignee is required' });
+  }
+  try {
+    const result = await esClient.search({
+      index: 'tasks',
+      body: {
+        query: {
+          bool: {
+            must: [{ term: { assignee } }, { term: { status: 'completed' } }],
+          },
+        },
+      },
+    });
+    const tasks = result.hits.hits.map(hit => hit._source);
+    res.status(200).json({ tasks });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch completed tasks', details: error.message });
+  }
+};

@@ -12,7 +12,7 @@ const esClient = new Client({
 async function verifyConnection() {
   try {
     const response = await esClient.info();
-    console.log('Connected to Elasticsearch:', response.body);
+    console.log('Connected to Elasticsearch:', response.name);
   } catch (error) {
     console.error('Error connecting to Elasticsearch:', error);
   }
